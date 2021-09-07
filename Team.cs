@@ -7,6 +7,9 @@ using System.Drawing;
 
 namespace SOM_Score_Assistant
 {
+    /// <summary>
+    /// Contains all elements to be displayed in the box score for a given team.
+    /// </summary>
     class Team
     {
         private string name;
@@ -17,6 +20,11 @@ namespace SOM_Score_Assistant
         {
             setNames(newName, newTrigram);
             setLogoFromFilename(logoFilename);
+        }
+
+        public Team(string newName, string newTrigram)
+        {
+            setNames(newName, newTrigram);
         }
 
         public Team() { }

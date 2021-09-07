@@ -9,6 +9,79 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Line X1="0" Y1="440"
+              X2="540" Y2="980"
+              Stroke="Black" StrokeThickness="3"/>
+        <Line X1="540" Y1="980"
+              X2="1080" Y2="440"
+              Stroke="Black" StrokeThickness="3"/>
+        <Polygon Name="NoneBase" Points="530,990 550,990 550,975 540,965 530,975" Fill="White" Stroke="Black" StrokeThickness="1"/>
+        <Polygon Name="ThirdBase" Points="260,700 280,700 280,720 260,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
+        <Polygon Name="FirstBase" Points="800,700 820,700 820,720 800,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
+        <Polygon Name="SecondBase" Points="530,440 530,420 550,420 550,440" Fill="White" Stroke="Black" StrokeThickness="1"/>
+
+        <TextBlock Name="Baserunner3" TextAlignment="Right" HorizontalAlignment="Left" Margin="40,710,0,0" Text="Player McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <TextBlock Name="Baserunner2" TextAlignment="Center"  HorizontalAlignment="Left" Margin="0,370,0,0" Text="Ever Given My Beloved" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="30" Width="1080"/>
+        <TextBlock Name="Baserunner1" TextAlignment="Left" HorizontalAlignment="Left" Margin="840,718,0,0" Text="XVI P. Sixteen" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <TextBlock Name="BatterLeftHanded" TextAlignment="Left" HorizontalAlignment="Left" Margin="600,960,0,0" Text="Artemis Levy" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <TextBlock Name="BatterRightHanded" TextAlignment="Right" HorizontalAlignment="Left" Margin="286,960,0,0" Text="Vivi Shoemaker" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <Ellipse Name="Out1" Fill="White" Stroke="Black" Width="40" Height="40" StrokeThickness="6" Margin="980,61,900,979"/>
+        <Ellipse Name="Out2" Fill="White" Stroke="Black" Width="40" Height="40" StrokeThickness="6" Margin="980,132,900,908"/>
+        <TextBlock Text="Outs:" Margin="895,61,957,970" FontSize="29" FontWeight="SemiBold"/>
+
+        <Rectangle Name="BoxScorePanel" HorizontalAlignment="Left" Height="1080" Margin="1080,0,0,0" Stroke="Black" VerticalAlignment="Center" Width="840"/>
+        <Grid Name="LineScore" Background="#FAFAFA" Margin="1110,30,30,908" BorderBrush="Black" BorderThickness="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Name="awayTrigram" Text="AWY" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Name="homeTrigram" Text="HME" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="1" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="1" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="2" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="3" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="4" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="5" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="6" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="7" Grid.Column="7" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="8" Grid.Column="8" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Name="lastInningLabel"  Text="9" Grid.Column="9" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="R" Grid.Column="10" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="H" Grid.Column="11" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="E" Grid.Column="12" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Name="AwayRuns" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="10" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+            <TextBlock Name="HomeRuns" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="10" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+            <TextBlock Name="AwayHits" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="11" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+            <TextBlock Name="HomeHits" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="11" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+            <TextBlock Name="AwayErrors" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="12" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+            <TextBlock Name="HomeErrors" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="12" 
+                       Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
+        </Grid>
+        <TextBlock Name="InfoBox" HorizontalAlignment="Left" Margin="40,132,0,0" Text="Information goes in this box. Things like reminders for chaos rolls and defensive positioning will appear here." TextWrapping="Wrap" VerticalAlignment="Top" Height="114" Width="645" FontSize="20"/>
+        <Button Name="ConfirmButton" Content="OK" Margin="622,254,0,0" VerticalAlignment="Top" Visibility="Visible"
+                Click="confirmButtonClick"/>
 
     </Grid>
 </Page>
