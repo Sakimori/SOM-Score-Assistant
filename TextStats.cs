@@ -9,13 +9,26 @@ namespace SOM_Score_Assistant
     /// <summary>
     /// Abstract class for blocks of text, such as game and fielding information.
     /// </summary>
-    public abstract class TextStats
+    public class TextStats
     {
+        private Dictionary<string, Dictionary<Player, int>> statCollection = new Dictionary<string, Dictionary<Player, int>>();
         private Dictionary<string, string> statDictionary = new Dictionary<string, string>();
 
-        public void setValue(string header, string value)
+        public void addValue(string statType, Player player, int value)
         {
-            statDictionary[header] = value;
+            if (statCollection.ContainsKey(statType))
+            {
+                if (statCollection[statType].ContainsKey(player))
+                {
+                    statCollection[statType][player] += value;
+                }
+                else { statCollection[statType].Add(player, value); }
+            }
+            else
+            {
+                statCollection.Add(statType, new Dictionary<Player, int>());
+                statCollection[statType].Add(player, value);
+            }
         }
 
         public string getValue(string header)

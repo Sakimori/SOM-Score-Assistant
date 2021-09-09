@@ -19,15 +19,16 @@
         <Polygon Name="ThirdBase" Points="260,700 280,700 280,720 260,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
         <Polygon Name="FirstBase" Points="800,700 820,700 820,720 800,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
         <Polygon Name="SecondBase" Points="530,440 530,420 550,420 550,440" Fill="White" Stroke="Black" StrokeThickness="1"/>
+        <Polygon Name="Out1" Stroke="Black" StrokeThickness="6" Points="980,60 980,100 1020,100 1020,60" Fill="White" Margin="-860,271,860,-271"/>
+        <Polygon Name="Out2" Stroke="Black" StrokeThickness="6" Points="980,60 980,100 1020,100 1020,60" Fill="White" Margin="-860,331,860,-271"/>
+        <TextBlock Text="Outs:" Margin="31,326,1821,657" FontSize="29" FontWeight="SemiBold"/>
 
         <TextBlock Name="Baserunner3" TextAlignment="Right" HorizontalAlignment="Left" Margin="40,710,0,0" Text="Player McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <TextBlock Name="Baserunner2" TextAlignment="Center"  HorizontalAlignment="Left" Margin="0,370,0,0" Text="Ever Given My Beloved" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="30" Width="1080"/>
         <TextBlock Name="Baserunner1" TextAlignment="Left" HorizontalAlignment="Left" Margin="840,718,0,0" Text="XVI P. Sixteen" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <TextBlock Name="BatterLeftHanded" TextAlignment="Left" HorizontalAlignment="Left" Margin="600,960,0,0" Text="Artemis Levy" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <TextBlock Name="BatterRightHanded" TextAlignment="Right" HorizontalAlignment="Left" Margin="286,960,0,0" Text="Vivi Shoemaker" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
-        <Ellipse Name="Out1" Fill="White" Stroke="Black" Width="40" Height="40" StrokeThickness="6" Margin="980,61,900,979"/>
-        <Ellipse Name="Out2" Fill="White" Stroke="Black" Width="40" Height="40" StrokeThickness="6" Margin="980,132,900,908"/>
-        <TextBlock Text="Outs:" Margin="895,61,957,970" FontSize="29" FontWeight="SemiBold"/>
+
 
         <Rectangle Name="BoxScorePanel" HorizontalAlignment="Left" Height="1080" Margin="1080,0,0,0" Stroke="Black" VerticalAlignment="Center" Width="840"/>
         <Grid Name="LineScore" Background="#FAFAFA" Margin="1110,30,30,908" BorderBrush="Black" BorderThickness="3">
@@ -79,9 +80,31 @@
             <TextBlock Name="HomeErrors" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="12" 
                        Text="0" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="Visible" Margin="0,0,0,0"/>
         </Grid>
-        <TextBlock Name="InfoBox" HorizontalAlignment="Left" Margin="40,132,0,0" Text="Information goes in this box. Things like reminders for chaos rolls and defensive positioning will appear here." TextWrapping="Wrap" VerticalAlignment="Top" Height="114" Width="645" FontSize="20"/>
-        <Button Name="ConfirmButton" Content="OK" Margin="622,254,0,0" VerticalAlignment="Top" Visibility="Visible"
-                Click="confirmButtonClick"/>
-
+        <TextBlock Name="InfoBox" HorizontalAlignment="Left" Margin="31,30,0,0" Text="Information goes in this box. Things like reminders for chaos rolls and defensive positioning will appear here." TextWrapping="Wrap" VerticalAlignment="Top" Height="114" Width="645" FontSize="20"/>
+        <CheckBox Name="ReminderCheckBox" Content="Hide Reminder Text" Margin="31,124,0,0" VerticalAlignment="Top"/>
+        <Button Name="StealButton"  Content="Steal Attempt" Margin="960,41,0,0" VerticalAlignment="Top" Click="stealButtonClick"/>
+        <Button Name="OutButton"  Content="Out" Margin="840,41,0,0" VerticalAlignment="Top" Click="OutButton_Click" Width="105"/>
+        <Button Name="HitButton"  Content="Hit" Margin="840,85,0,0" VerticalAlignment="Top" Click="HitButton_Click" Width="105"/>
+        <Button Name="OtherButton"  Content="Other" Margin="960,85,0,0" VerticalAlignment="Top" Click="OtherButton_Click" Width="105"/>
+        <Button Name="SecondBaseButton" Content="Double" Width="80" Margin="500,451,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
+        <Button x:Name="FirstBaseButton" Content="Single" Width="80" Margin="688,697,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
+        <Button x:Name="ThirdBaseButton" Content="Triple" Width="80" Margin="320,697,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
+        <Button x:Name="NoneBaseButton" Content="Dinger" Width="80" Margin="500,895,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
+        <TextBlock Name="PitcherName" TextAlignment="Center" HorizontalAlignment="Left" Margin="436,673,0,0" Text="Pitcher McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <Button x:Name="BasesBackButton" Content="Cancel" Width="80" Margin="500,636,0,0" VerticalAlignment="Top" Click="BasesBackButton_Click"/>
+        <Button x:Name="SetupButton" Content="Set Up Game" Width="234" Margin="411,171,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="76"/>
+        <Button x:Name="Button0" Content="C" Width="40" Margin="520,895,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button1" Content="1B" Width="40" Margin="773,620,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button2" Content="2B" Width="40" Margin="683,467,0,0" Click="FielderButton_Click" VerticalAlignment="Top"/>
+        <Button x:Name="Button3" Content="3B" Width="40" Margin="278,620,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button4" Content="SS" Width="40" Margin="358,467,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button5" Content="LF" Width="40" Margin="246,326,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button6" Content="CF" Width="40" Margin="516,294,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="Button7" Content="RF" Width="40" Margin="815,326,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="ButtonP" Content="P" Width="40" Margin="520,599,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
+        <Button x:Name="FlyoutButton" Content="Flyout" Width="100" Margin="411,271,0,0" VerticalAlignment="Top" Click="OutTypeButton_Click"/>
+        <Button x:Name="GroundoutButton" Content="Groundout" Width="100" Margin="411,310,0,0" VerticalAlignment="Top" Click="OutTypeButton_Click"/>
+        <Button x:Name="StrikeoutButton" Content="Strikeout" Width="100" Margin="561,294,0,0" VerticalAlignment="Top" Click="OutTypeButton_Click"/>
+        <Button x:Name="WalkButton"  Content="Walk" Margin="719,41,0,0" VerticalAlignment="Top" Click="WalkButton_Click" Width="105"/>
     </Grid>
 </Page>
