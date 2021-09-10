@@ -10,7 +10,7 @@ namespace SOM_Score_Assistant
     /// <summary>
     /// Contains all elements to be displayed in the box score for a given team.
     /// </summary>
-    class Team
+    public class Team
     {
         private string name;
         private string trigram;
@@ -60,6 +60,8 @@ namespace SOM_Score_Assistant
             return -1;
         }
 
+        public List<Pitcher> getAllPitchers() => allPitchers;
+
         public bool hasDefender(int positionIndex)
         {
             foreach(PositionPlayer player in lineup)
@@ -74,10 +76,7 @@ namespace SOM_Score_Assistant
 
         public void setLineupPosition(PositionPlayer player, int position)
         {
-            if(lineup[position] == null)
-            {
-                lineup[position] = player;
-            }
+            lineup[position] = player;
         }
 
         public void setPitcher(Pitcher player)
@@ -101,6 +100,10 @@ namespace SOM_Score_Assistant
 
         public string getTrigram() => trigram;
 
+        public PositionPlayer[] getLineup() => lineup;
+
+        public int getBatterIndex() => lineupPosition;
+
         public void setLogoFromFilename(string filename)
         {
             logo = Image.FromFile(filename);
@@ -119,6 +122,8 @@ namespace SOM_Score_Assistant
         private Handedness handedness;
         public int positionIndex;
         public abstract Dictionary<string, int> baseStats { get; set; }
+
+        public Player() { }
 
         public Player(string initName, Handedness hand)
         {
@@ -141,8 +146,9 @@ namespace SOM_Score_Assistant
         }
     }
 
-    class PositionPlayer : Player
+    public class PositionPlayer : Player
     {
+        public PositionPlayer() { }
         public PositionPlayer(string initName, Handedness hand, int position) : base(initName, hand, position) { }
 
         override public Dictionary<string, int> baseStats { get; set; } = new Dictionary<string, int>()
@@ -156,14 +162,15 @@ namespace SOM_Score_Assistant
         };
     }
 
-    class Pitcher : Player
+    public class Pitcher : Player
     {
+        public Pitcher() { }
         public Pitcher(string initName, Handedness hand) : base(initName, hand) { }
         public override Dictionary<string, int> baseStats { get; set; } = new Dictionary<string, int>()
         {
             {"OP", 0 },
             {"H", 0 },
-            {"ER", 0 },
+            {"R", 0 },
             {"BB", 0 },
             {"K", 0 },
             {"HR", 0 }

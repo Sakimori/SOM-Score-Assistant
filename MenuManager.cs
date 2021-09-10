@@ -22,7 +22,7 @@ namespace SOM_Score_Assistant
             setupButtonEnable();
         }
 
-        private void disableAll()
+        public void disableAll()
         {
             foreach (Button button in buttons.Values)
             {
@@ -64,6 +64,19 @@ namespace SOM_Score_Assistant
             activeButtons.Add(buttons["OutButton"]);
             activeButtons.Add(buttons["WalkButton"]);
             activeButtons.Add(buttons["StealButton"]);
+            activeButtons.Add(buttons["OtherButton"]);
+            enableActive();
+        }
+
+        public void otherButtonsEnable()
+        {
+            disableAll();
+            activeButtons.Add(buttons["PinchHitButton"]);
+            activeButtons.Add(buttons["PitcherSubButton"]);
+            activeButtons.Add(buttons["PositionChangeButton"]);
+            activeButtons.Add(buttons["ErrorButton"]);
+            activeButtons.Add(buttons["WildPitchButton"]);
+            activeButtons.Add(buttons["BasesBackButton"]);
             enableActive();
         }
 
@@ -127,6 +140,8 @@ namespace SOM_Score_Assistant
             activeButtons.Add(buttons["StrikeoutButton"]);
             activeButtons.Add(buttons["FlyoutButton"]);
             activeButtons.Add(buttons["GroundoutButton"]);
+            activeButtons.Add(buttons["FCButton"]);
+            activeButtons.Add(buttons["BasesBackButton"]);
             enableActive();
         }
     }
@@ -135,9 +150,11 @@ namespace SOM_Score_Assistant
     {
         Baserunner,
         BaserunnerOnOut,
+        FC,
         Batter,
         Fielder,
         OutType,
+        Error,
         MainMenu
     }
 }

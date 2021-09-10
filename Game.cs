@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SOM_Score_Assistant
 {
-    class Game
+    public class Game
     {
         private Team awayTeam;
         private Team homeTeam;
@@ -23,6 +25,7 @@ namespace SOM_Score_Assistant
             {3, null }
         };
         public bool init = false;
+        public bool final = false;
 
         public Game(Team away, Team home)
         {
@@ -34,6 +37,8 @@ namespace SOM_Score_Assistant
             topOfInning = true;
             inning = 1;
         }
+
+        public Game() { }
 
         /// <summary>
         /// Returns home team if passed True, and away team if passed False.
@@ -61,7 +66,17 @@ namespace SOM_Score_Assistant
             {
                 topOfInning = true;
                 inning += 1;
-                lineScore.addInning();
+                if (inning <= 9)
+                {
+                    lineScore.addInning();
+                }
+                else
+                {
+                    if(lineScore.getTotalScore()[0] != lineScore.getTotalScore()[1])
+                    {
+                        final = true;
+                    }
+                }
             }
 
             bases = new Dictionary<int, PositionPlayer>()
@@ -72,14 +87,18 @@ namespace SOM_Score_Assistant
             };
 
             outs = 0;
+
+
         }
 
-        public void addRuns(int runs) => lineScore.addScore(runs, topOfInning);
+        public void addRuns(int runs)
+        {
+            lineScore.addScore(runs, topOfInning);
+            getPitcher().baseStats["R"] += runs;
+        }
 
         public Pitcher getPitcher() => topOfInning? homeTeam.getPitcher() : awayTeam.getPitcher();
 
         public PositionPlayer getBatter() => topOfInning ? awayTeam.getBatter() : homeTeam.getBatter();
     }
-
-
 }

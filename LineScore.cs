@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SOM_Score_Assistant
 {
-    class LineScore
+    public class LineScore
     {
         private string awayTrigram;
         private string homeTrigram;
@@ -26,6 +26,8 @@ namespace SOM_Score_Assistant
             addInning();
         }
 
+        public LineScore() { }
+
         public void addInning()
         {
             innings.Add(new int[] { 0, 0 });
@@ -42,6 +44,32 @@ namespace SOM_Score_Assistant
             return innings[inning-1][top ? 0 : 1];
         }
 
+        public int[] getTotalScore()
+        {
+            int[] scores = new int[] { 0, 0 };
+            foreach(int[] inning in innings)
+            {
+                scores[0] += inning[0];
+                scores[1] += inning[1];
+            }
+            return scores;
+        }
+
         public int inningCount() => innings.Count;
+
+        public void addHit(bool top)
+        {
+            Dictionary<string, int> stats = top ? awayStats : homeStats;
+            stats["H"] += 1;
+        }
+
+        public void addError(bool top)
+        {
+            Dictionary<string, int> stats = top ? homeStats : awayStats;
+            stats["E"] += 1;
+        }
+
+        public int[] getHits() => new int[] { awayStats["H"], homeStats["H"] };
+        public int[] getErrors() => new int[] { awayStats["E"], homeStats["E"] };
     }
 }

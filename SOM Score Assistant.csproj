@@ -125,8 +125,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BattingText.cs" />
     <Compile Include="BoxScore.cs" />
+    <Compile Include="EditPlayerDialog.xaml.cs">
+      <DependentUpon>EditPlayerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LineScore.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -165,6 +167,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="EditPlayerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -176,6 +182,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
       <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="System.Drawing.Common">
       <Version>5.0.2</Version>

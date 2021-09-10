@@ -36,6 +36,7 @@
             <x:String>Left Field</x:String>
             <x:String>Center Field</x:String>
             <x:String>Right Field</x:String>
+            <x:String>Designated Hitter</x:String>
         </ComboBox>
     </Grid>
 </ContentDialog>

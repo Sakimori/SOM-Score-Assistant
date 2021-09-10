@@ -24,6 +24,8 @@ namespace SOM_Score_Assistant
     public sealed partial class MainPage : Page
     {
         Game activeGame;
+
+        List<Game> undoList = new List<Game>();
         private readonly Dictionary<string, string> reminderTexts = new Dictionary<string, string>
         {
             {"chaosCheck", "Have you rolled for chaos?" },
@@ -34,7 +36,9 @@ namespace SOM_Score_Assistant
         private string[] buttonNames = new string[] { "StealButton", "WalkButton",
         "OutButton", "HitButton", "OtherButton", "SecondBaseButton", "FirstBaseButton", "ThirdBaseButton", "NoneBaseButton", "BasesBackButton", "SetupButton",
         "Button0", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7", "ButtonP",
-        "FlyoutButton", "GroundoutButton", "StrikeoutButton"};
+        "FlyoutButton", "GroundoutButton", "StrikeoutButton", "FCButton",
+        "PinchHitButton", "PitcherSubButton", "PositionChangeButton",
+        "ErrorButton", "WildPitchButton"};
         MenuManager menu;
 
         private List<int> baserunnersToCheck = new List<int>();
@@ -61,6 +65,10 @@ namespace SOM_Score_Assistant
             activeGame = new Game(new Team(teamNames[0], teamNames[1]), new Team(teamNames[2], teamNames[3]));
             awayTrigram.Text = activeGame.getTeam(false).getTrigram();
             homeTrigram.Text = activeGame.getTeam(true).getTrigram();
+            BoxBattingAway.Content = teamNames[0] + " Batting";
+            BoxBattingHome.Content = teamNames[2] + " Batting";
+            BoxPitchingAway.Content = teamNames[0] + " Pitching";
+            BoxPitchingHome.Content = teamNames[2] + " Pitching";
 
             Pitcher startingPitcher = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getPitchingTeam().getName()), true);
             PositionPlayer leadoffBatter = await getPositionPlayerFromInput(String.Format("Leadoff batter for the {0}:", activeGame.getBattingTeam().getName()), true);
@@ -79,20 +87,30 @@ namespace SOM_Score_Assistant
             {
                 foreach (bool top in new bool[] { true, false })
                 {
-                    string shortName = String.Format("{0}{1}Cell", inning, top ? "t" : "b");
-                    TextBlock currentBlock = (TextBlock)this.FindName(shortName);
-                    if (currentBlock == null)
+                    TextBlock currentBlock = null;
+                    if(inning <= 9)
                     {
-                        currentBlock = new TextBlock();
-                        currentBlock.VerticalAlignment = VerticalAlignment.Center;
-                        currentBlock.HorizontalAlignment = HorizontalAlignment.Center;
-                        currentBlock.Text = "0";
-                        currentBlock.FontSize = 18;
-                        currentBlock.Margin = new Thickness(0,0,0,0);
-                        currentBlock.Name = String.Format("{0}{1}Cell", inning, top ? "t" : "b");
-                        LineScore.Children.Add(currentBlock);
-                        Grid.SetRow(currentBlock, top ? 1 : 2);
-                        Grid.SetColumn(currentBlock, inning);
+                        string shortName = String.Format("{0}{1}Cell", inning, top ? "t" : "b");
+                        currentBlock = (TextBlock)this.FindName(shortName);
+                        if (currentBlock == null)
+                        {
+                            currentBlock = new TextBlock();
+                            currentBlock.VerticalAlignment = VerticalAlignment.Center;
+                            currentBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                            currentBlock.Text = "0";
+                            currentBlock.FontSize = 18;
+                            currentBlock.Margin = new Thickness(0, 0, 0, 0);
+                            currentBlock.Name = String.Format("{0}{1}Cell", inning, top ? "t" : "b");
+                            LineScore.Children.Add(currentBlock);
+                            Grid.SetRow(currentBlock, top ? 1 : 2);
+                            Grid.SetColumn(currentBlock, inning);
+                        }                      
+                    }
+                    else
+                    {
+                        string shortName = String.Format("9{1}Cell", top ? "t" : "b");
+                        lastInningLabel.Text = inning.ToString();
+                        currentBlock = (TextBlock)this.FindName(shortName);
                     }
                     int score = activeGame.getLineScore().getScore(inning, top);
                     scores[top ? 0 : 1] += score;
@@ -103,16 +121,218 @@ namespace SOM_Score_Assistant
             }
             AwayRuns.Text = Convert.ToString(scores[0]);
             HomeRuns.Text = Convert.ToString(scores[1]);
+            int[] hits = activeGame.getLineScore().getHits();
+            AwayHits.Text = Convert.ToString(hits[0]);
+            HomeHits.Text = Convert.ToString(hits[1]);
+            int[] errors = activeGame.getLineScore().getErrors();
+            AwayErrors.Text = Convert.ToString(errors[0]);
+            HomeErrors.Text = Convert.ToString(errors[1]);
+        }
+
+        private void updateBoxScore()
+        {
+            //update lineup
+            Team battingTeam = (bool)BoxBattingAway.IsChecked ? activeGame.getTeam(false) : activeGame.getTeam(true);
+            Team pitchingTeam = (bool)BoxPitchingAway.IsChecked ? activeGame.getTeam(false) : activeGame.getTeam(true);
+            if ((bool)BoxBattingAway.IsChecked)
+            {
+                BoxBattingAwayIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.LightGray);
+                BoxBattingHomeIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+            }
+            else
+            {
+                BoxBattingAwayIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+                BoxBattingHomeIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.LightGray);
+            }
+
+
+            BoxScore.BatterRow[] rows = activeGame.getBoxScore().getBatterRows((bool)BoxBattingAway.IsChecked);
+
+            for (int i = 0; i < battingTeam.getNextEmptyLineup(); i++)
+            {               
+                if (i == battingTeam.getBatterIndex())
+                {
+                    setActiveTableRow(LineupTable, i);
+                }
+                else
+                {
+                    setBaseTableRowFormatting(LineupTable, i);
+                }
+                populateBatterRow(LineupTable, rows[i], i);
+            }
+            for(int i = battingTeam.getNextEmptyLineup(); i < LineupTable.RowDefinitions.Count; i++)
+            {
+                setBaseTableRowFormatting(LineupTable, i);
+                removeTableFormatting(LineupTable, i);
+            }
+            
+            //update batting text
+
+            //update pitching
+            if ((bool)BoxPitchingAway.IsChecked)
+            {
+                BoxPitchingAwayIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.LightGray);
+                BoxPitchingHomeIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+            }
+            else
+            {
+                BoxPitchingAwayIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+                BoxPitchingHomeIndicator.Fill = new SolidColorBrush(Windows.UI.Colors.LightGray);
+            }
+
+            BoxScore.PitcherRow[] pitcherRows = activeGame.getBoxScore().getPitcherRows((bool)BoxPitchingAway.IsChecked);
+
+            if(pitcherRows != null)
+            {
+                for (int i = 0; i < pitchingTeam.getAllPitchers().Count; i++)
+                {
+                    setBaseTableRowFormatting(PitchingTable, i);
+                    populatePitcherRow(PitchingTable, pitcherRows[i], i);
+                }
+            }         
+
+            for(int i = pitchingTeam.getAllPitchers().Count; i < PitchingTable.RowDefinitions.Count; i++)
+            {
+                setBaseTableRowFormatting(PitchingTable, i);
+                removeTableFormatting(PitchingTable, i);
+            }
+            //update fielding text
+        }
+
+        private void populateBatterRow(Grid table, BoxScore.BatterRow row, int rowIndex)
+        {
+            for(int index = 0; index < row.textBlocks.Length; index++)
+            {
+                deleteItemInTable(table, rowIndex, index);
+                table.Children.Add(row.textBlocks[index]);
+                Grid.SetRow(row.textBlocks[index], rowIndex);
+                Grid.SetColumn(row.textBlocks[index], index);
+            }
+        }
+
+        private void populatePitcherRow(Grid table, BoxScore.PitcherRow row, int rowIndex)
+        {
+            for (int index = 0; index < row.textBlocks.Length; index++)
+            {
+                deleteItemInTable(table, rowIndex, index);
+                table.Children.Add(row.textBlocks[index]);
+                Grid.SetRow(row.textBlocks[index], rowIndex);
+                Grid.SetColumn(row.textBlocks[index], index);
+            }
+        }
+
+        private void deleteItemInTable(Grid table, int rowIndex, int columnIndex)
+        {
+            TextBlock toRemove = null;
+
+            foreach (object child in table.Children)
+            {
+                if (child.GetType().Equals(typeof(TextBlock)))
+                {
+                    TextBlock block = (TextBlock)child;
+                    if (Grid.GetRow(block) == rowIndex && Grid.GetColumn(block) == columnIndex)
+                    {
+                        toRemove = block;
+                    }
+                }
+            }
+
+            if(toRemove != null) { table.Children.Remove(toRemove); }
+        }
+
+        private void setBaseTableRowFormatting(Grid table, int rowIndex)
+        {
+            bool set = false;
+            List<TextBlock> removeList = new List<TextBlock>();
+            foreach(object child in table.Children)
+            {
+                if(child.GetType().Equals(typeof(Border))) 
+                {
+                    Border border = (Border)child;
+                    if(Grid.GetRow(border) == rowIndex)
+                    {
+                        border.Background = new SolidColorBrush((rowIndex % 2 == 1) ? Windows.UI.Colors.White : Windows.UI.Colors.LightGray);
+                        border.BorderThickness = new Thickness(0, 0, 0, 1);
+                        border.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Black);
+                        set = true;
+                    }
+                }
+                else if (child.GetType().Equals(typeof(TextBlock)) && Grid.GetRow((TextBlock)child) == rowIndex)
+                {
+                    removeList.Add((TextBlock)child);
+                }
+            }
+
+            foreach(TextBlock block in removeList)
+            {
+                table.Children.Remove(block);
+            }
+
+            if (!set)
+            {
+                Border rowBorder = new Border();
+                rowBorder.Background = new SolidColorBrush((rowIndex % 2 == 1) ? Windows.UI.Colors.White : Windows.UI.Colors.LightGray);
+                rowBorder.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Black);
+                rowBorder.BorderThickness = new Thickness(0, 0, 0, 1);
+                table.Children.Add(rowBorder);
+                Grid.SetRow(rowBorder, rowIndex);
+                Grid.SetColumn(rowBorder, 0);
+                Grid.SetColumnSpan(rowBorder, table.ColumnDefinitions.Count);
+            }     
+            
+        }
+
+        private void removeTableFormatting(Grid table, int rowIndex)
+        {
+            Border remBorder = null;
+            foreach (object child in table.Children)
+            {
+                if (child.GetType().Equals(typeof(Border)))
+                {
+                    Border border = (Border)child;
+                    if (Grid.GetRow(border) == rowIndex)
+                    {
+                        remBorder = border;
+                    }
+                }
+            }
+            if(remBorder != null) { table.Children.Remove(remBorder); }
+        }
+
+        private void setActiveTableRow(Grid table, int rowIndex)
+        {
+            bool set = false;
+            foreach (object child in table.Children)
+            {
+                if (child.GetType().Equals(typeof(Border)))
+                {
+                    Border border = (Border)child;
+                    if (Grid.GetRow(border) == rowIndex)
+                    {
+                        border.Background = new SolidColorBrush(Windows.UI.Colors.LightCoral);
+                        set = true;
+                    }
+                }
+            }
+            if (!set)
+            {
+                setBaseTableRowFormatting(table, rowIndex);
+                setActiveTableRow(table, rowIndex);
+            }
         }
 
         private void updateBases()
         {
             foreach(int baseNum in activeGame.bases.Keys)
             {
-                if(activeGame.bases[baseNum] != null)
-                {
-                    TextBlock baseName = (TextBlock)this.FindName("Baserunner" + Convert.ToString(baseNum));
+                TextBlock baseName = (TextBlock)this.FindName("Baserunner" + Convert.ToString(baseNum));
+                if (activeGame.bases[baseNum] != null)
+                {                  
                     baseName.Text = activeGame.bases[baseNum].ToString();
+                }
+                else
+                {
+                    baseName.Text = "";
                 }
             }
         }
@@ -152,7 +372,7 @@ namespace SOM_Score_Assistant
             return activeGame.bases[3] != null;
         }
 
-        private async void addBatter()
+        private void addBatter()
         {
 
         }
@@ -177,9 +397,45 @@ namespace SOM_Score_Assistant
             menu.baseButtonsEnable(true);
         }
 
-        private void stealButtonClick(object sender, RoutedEventArgs e)
+        private async void stealButtonClick(object sender, RoutedEventArgs e)
         {
-            
+            for(int i = 3; i >= 1; i--) 
+            {
+                if(activeGame.bases[i] != null && (i == 3 || activeGame.bases[i+1] == null))
+                {
+                    await stealAttempt(activeGame.bases[i], i);
+                }
+            }
+            updateUI();
+        }
+
+        private async Task<bool> stealAttempt(PositionPlayer runner, int startBase)
+        {
+            ContentDialogResult result = await baserunnerAdvanceQuery(new string[] { String.Format("What happened to {0}?", runner.ToString()), "Stolen Base", "Caught Stealing", "Nothing" });
+            if(result == ContentDialogResult.Primary)
+            {
+                if (startBase < 3)
+                {
+                    activeGame.bases[startBase + 1] = runner;                    
+                }
+                else
+                {
+                    activeGame.addRuns(1);
+                    runner.baseStats["R"] += 1;
+                }
+                activeGame.bases[startBase] = null;
+                activeGame.getBoxScore().awayTextStatsBatting.addValue("SB", runner, 1);
+                return true;
+            }
+            else if(result == ContentDialogResult.Secondary)
+            {
+                activeGame.getPitcher().baseStats["OP"] += 1;
+                activeGame.bases[startBase] = null;
+                activeGame.getBoxScore().awayTextStatsBatting.addValue("CS", runner, 1);
+                activeGame.outs += 1;
+                return true;
+            }
+            return false;
         }
 
         private async Task<PositionPlayer> getPositionPlayerFromInput(string title, bool required)
@@ -267,7 +523,7 @@ namespace SOM_Score_Assistant
 
         private void OtherButton_Click(object sender, RoutedEventArgs e)
         {
-
+            menu.otherButtonsEnable();
         }
 
         private void BaseButton_Click(object sender, RoutedEventArgs e)
@@ -291,17 +547,23 @@ namespace SOM_Score_Assistant
                     break;
             }
             
-            if(menu.state == QueryStates.Batter)
+            if(menu.state == QueryStates.Batter || menu.state == QueryStates.Error)
             {
                 int runs = 0;
-                activeGame.getBatter().baseStats["AB"] += 1;
-                activeGame.getBatter().baseStats["H"] += 1;
-                activeGame.getBattingBoxScore().addValue("TB", activeGame.getBatter(), baseNum);
+                if(menu.state == QueryStates.Batter)
+                {
+                    activeGame.getBatter().baseStats["H"] += 1;
+                    activeGame.getPitcher().baseStats["H"] += 1;
+                    activeGame.getLineScore().addHit(activeGame.topOfInning);
+                    activeGame.getBattingBoxScore().addValue("TB", activeGame.getBatter(), baseNum);
+                }
+                activeGame.getBatter().baseStats["AB"] += 1;              
                 if (baseNum == 4)
                 {
                     activeGame.getBattingBoxScore().addValue("HR", activeGame.getBatter(), 1);
+                    activeGame.getPitcher().baseStats["HR"] += 1;
                     runs = 1;
-                    foreach(int baseI in activeGame.bases.Keys)
+                    for(int baseI = 1; baseI <= 3; baseI++)
                     {
                         if(activeGame.bases[baseI] != null)
                         {
@@ -395,6 +657,11 @@ namespace SOM_Score_Assistant
             return;
         }
 
+        private void addUndoList()
+        {
+
+        }
+
         private async void updateGame()
         {
             if(baserunnersToCheck.Count > 0)
@@ -411,25 +678,15 @@ namespace SOM_Score_Assistant
             }
             else
             {
+                //addUndoList();
+
                 if(activeGame.outs >= 3)
                 {
                     activeGame.endHalfInning();
-                }
-
-                if(activeGame.outs == 2) 
-                { 
-                    Out2.Fill = new SolidColorBrush(Windows.UI.Colors.Black); 
-                    Out1.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
-                }
-                else if(activeGame.outs == 1)
-                {
-                    Out2.Fill = new SolidColorBrush(Windows.UI.Colors.White);
-                    Out1.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
-                }
-                else
-                {
-                    Out2.Fill = new SolidColorBrush(Windows.UI.Colors.White);
-                    Out1.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+                    BoxBattingAway.IsChecked = activeGame.topOfInning;
+                    BoxBattingHome.IsChecked = !activeGame.topOfInning;
+                    BoxPitchingAway.IsChecked = !activeGame.topOfInning;
+                    BoxPitchingHome.IsChecked = activeGame.topOfInning;
                 }
 
                 if(activeGame.getPitcher() == null)
@@ -449,13 +706,8 @@ namespace SOM_Score_Assistant
                     PositionPlayer newPlayer = await getPositionPlayerFromInput(String.Format("Please input the next batter for the {0}.", activeGame.getBattingTeam().getName()), true);
                     while (!set)
                     {
-                        
-                        if (!activeGame.getBattingTeam().hasDefender(newPlayer.positionIndex))
-                        {
-                            activeGame.getBattingTeam().setLineupPosition(newPlayer, activeGame.getBattingTeam().getNextEmptyLineup());
-                            set = true;
-                        }
-                        else { newPlayer = await getPositionPlayerFromInput(String.Format("The {0} already have that defensive position.", activeGame.getBattingTeam().getName()), true); }                      
+                        activeGame.getBattingTeam().setLineupPosition(newPlayer, activeGame.getBattingTeam().getNextEmptyLineup());
+                        set = true;                   
                     }                 
                 }
 
@@ -473,26 +725,58 @@ namespace SOM_Score_Assistant
                     }
                 }
 
-                InfoBox.Text = "";
-                if (!reminderDisable)
-                {
-                    if (areBaserunners())
-                    {
-                        InfoBox.Text += reminderTexts["chaosCheck"];
-                        InfoBox.Text += " " + reminderTexts["defenseCheck"] + " ";
-                    }
-                }
-                InfoBox.Text += readyString;
-                menu.state = QueryStates.MainMenu;
-                menu.mainMenuEnable();
                 activeGame.getBattingTeam().advanceLineup();
-                updateLineScore();
-                updateBases();
-                updateBatter();
-                updatePitcher();
+
+                updateUI();
+            }
+
+            if (activeGame.final)
+            {
+                menu.disableAll();
+                InfoBox.Text = "Final!";
             }
         }
 
+        private void updateUI()
+        {
+            InfoBox.Text = "";
+            if (!reminderDisable)
+            {
+                if (areBaserunners())
+                {
+                    InfoBox.Text += reminderTexts["chaosCheck"];
+                    InfoBox.Text += " " + reminderTexts["defenseCheck"] + " ";
+                }
+            }
+            InfoBox.Text += readyString;
+            menu.state = QueryStates.MainMenu;
+            menu.mainMenuEnable();
+            updateLineScore();
+            updateBoxScore();
+            updateBases();
+            updateBatter();
+            updatePitcher();
+            updateOuts();
+        }
+
+        private void updateOuts()
+        {
+            if (activeGame.outs == 2)
+            {
+                Out2.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
+                Out1.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
+            }
+            else if (activeGame.outs == 1)
+            {
+                Out2.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+                Out1.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
+            }
+            else
+            {
+                Out2.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+                Out1.Fill = new SolidColorBrush(Windows.UI.Colors.White);
+            }
+        }
         private void BasesBackButton_Click(object sender, RoutedEventArgs e)
         {
             if (!menu.locked)
@@ -513,26 +797,293 @@ namespace SOM_Score_Assistant
             InfoBox.Text = buttonName;
         }
 
-        private void OutTypeButton_Click(object sender, RoutedEventArgs e)
+        private async void OutTypeButton_Click(object sender, RoutedEventArgs e)
         {
             string buttonName = ((Button)sender).Name;
+            activeGame.getPitcher().baseStats["OP"] += 1;
+            activeGame.outs += 1;
+
             if(buttonName == "StrikeoutButton")
             {
                 activeGame.getPitcher().baseStats["K"] += 1;
                 activeGame.getBatter().baseStats["K"] += 1;
                 activeGame.getBatter().baseStats["AB"] += 1;
-                activeGame.outs += 1;
-                updateGame();
             }
             else if(buttonName == "GroundoutButton")
             {
-                
+                bool sac = false;
+                if (!areBaserunners() || activeGame.outs >= 3)
+                {
+                    //nothing special happens here
+                }
+                else
+                {
+                    sac = await outWithBaserunners();   
+                }
+
+                if (!sac)
+                {
+                    activeGame.getBatter().baseStats["AB"] += 1;
+                }
+                else
+                {
+                    activeGame.getBatter().baseStats["RBI"] += 1;
+                    activeGame.addRuns(1);
+                }
             }
+            else if(buttonName == "FlyoutButton")
+            {
+                bool sac = false;
+                if (!areBaserunners() || activeGame.outs >= 3)
+                {
+                    //nothing special happens here
+                }
+                else
+                {
+                    sac = await outWithBaserunners();
+                }
+
+                if (!sac)
+                {
+                    activeGame.getBatter().baseStats["AB"] += 1;
+                }
+                else
+                {
+                    activeGame.getBatter().baseStats["RBI"] += 1;
+                    activeGame.addRuns(1);
+                }
+            }
+            else if(buttonName == "FCButton")
+            {
+                activeGame.getPitcher().baseStats["OP"] -= 1;
+                activeGame.outs -= 1;
+                bool score = await outWithBaserunners();
+                activeGame.bases[1] = activeGame.getBatter();
+            }
+
+            updateGame();
+        }
+
+        public async Task<bool> outWithBaserunners()
+        {
+            bool sac = false;
+            if (thirdOccupied())
+            {
+                ContentDialogResult result = await baserunnerAdvanceQuery(new string[] { String.Format("What happened to {0}, the runner on third?", activeGame.bases[3].ToString()), "Scored", "Thrown Out", "Held" });
+                if (result == ContentDialogResult.Primary)
+                {
+                    sac = true;
+                    activeGame.bases[3].baseStats["R"] += 1;
+                    activeGame.bases[3] = null;
+                }
+                else if (result == ContentDialogResult.Secondary)
+                {
+                    activeGame.bases[3] = null;
+                    activeGame.outs += 1;
+                    activeGame.getPitcher().baseStats["OP"] += 1;
+                    activeGame.getBattingBoxScore().addValue("GIDP", activeGame.getBatter(), 1);
+                }
+            }
+            for (int baseI = 2; baseI >= 1; baseI--)
+            {
+                if (activeGame.bases[baseI] != null && activeGame.bases[baseI + 1] == null)
+                {
+                    ContentDialogResult result = await baserunnerAdvanceQuery(new string[] { String.Format("What happened to {0}?", activeGame.bases[baseI].ToString()), "Advanced", "Thrown Out", "Held" });
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        activeGame.bases[baseI + 1] = activeGame.bases[baseI];
+                        activeGame.bases[baseI] = null;
+                    }
+                    else if (result == ContentDialogResult.Secondary)
+                    {
+                        activeGame.bases[baseI] = null;
+                        activeGame.outs += 1;
+                        activeGame.getPitcher().baseStats["OP"] += 1;
+                        activeGame.getBattingBoxScore().addValue("GIDP", activeGame.getBatter(), 1);
+                    }
+                }
+            }
+            return sac;
+        }
+
+        public async Task<bool> fcOut()
+        {
+            bool score = false;
+            if (thirdOccupied())
+            {
+                ContentDialogResult result = await baserunnerAdvanceQuery(new string[] { String.Format("What happened to {0}, the runner on third?", activeGame.bases[3].ToString()), "Scored", "Thrown Out", "Held" });
+                if (result == ContentDialogResult.Primary)
+                {
+                    score = true;
+                    activeGame.bases[3].baseStats["R"] += 1;
+                    activeGame.bases[3] = null;
+                }
+                else if (result == ContentDialogResult.Secondary)
+                {
+                    activeGame.bases[3] = null;
+                    activeGame.outs += 1;
+                    activeGame.getPitcher().baseStats["OP"] += 1;
+                }
+            }
+            for (int baseI = 2; baseI >= 1; baseI--)
+            {
+                if (activeGame.bases[baseI] != null && activeGame.bases[baseI + 1] == null)
+                {
+                    ContentDialogResult result = await baserunnerAdvanceQuery(new string[] { String.Format("What happened to {0}?", activeGame.bases[baseI].ToString()), "Advanced", "Thrown Out", "Held" });
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        activeGame.bases[baseI + 1] = activeGame.bases[baseI];
+                        activeGame.bases[baseI] = null;
+                    }
+                    else if (result == ContentDialogResult.Secondary)
+                    {
+                        activeGame.bases[baseI] = null;
+                        activeGame.outs += 1;
+                        activeGame.getPitcher().baseStats["OP"] += 1;
+                    }
+                }
+            }
+            return score;
+        }
+
+        /// <summary>
+        /// shows a dialog box to ask about a baserunner.
+        /// </summary>
+        /// <param name="text">[Title, PrimaryText, SecondaryText, CloseText]</param>
+        /// <returns>ContentDialogResult</returns>
+        private async Task<ContentDialogResult> baserunnerAdvanceQuery(string[] text)
+        {
+            ContentDialog askBox = new ContentDialog()
+            {
+                Title = text[0],
+                PrimaryButtonText = text[1],
+                SecondaryButtonText = text[2],
+                CloseButtonText = text[3]
+            };
+            return await askBox.ShowAsync();
+        }
+
+        private async Task<ContentDialogResult> wildPitchAdvanceQuery()
+        {
+            ContentDialog askBox = new ContentDialog()
+            {
+                Title = "Did the runners advance?",
+                PrimaryButtonText = "Yes!",
+                CloseButtonText = "No :("
+            };
+            return await askBox.ShowAsync();
         }
 
         private void WalkButton_Click(object sender, RoutedEventArgs e)
         {
+            int maxWalkers = 1;
+            for(int baseNum = 1; baseNum <= 3; baseNum++)
+            {
+                if(activeGame.bases[baseNum] == null)
+                {
+                    maxWalkers = baseNum;
+                    break;
+                }
+            }
+            if(maxWalkers == 4)
+            {
+                activeGame.bases[3].baseStats["R"] += 1;
+                activeGame.bases[3] = null;
+                activeGame.getBatter().baseStats["RBI"] += 1;
+                activeGame.addRuns(1);
+                maxWalkers = 3;
+            }
+            for(int walkies = maxWalkers; walkies >= 2; walkies--)
+            {
+                activeGame.bases[walkies] = activeGame.bases[walkies - 1];
+                activeGame.bases[walkies - 1] = null;
+            }
+            activeGame.bases[1] = activeGame.getBatter();
+            activeGame.getBatter().baseStats["BB"] += 1;
+            activeGame.getPitcher().baseStats["BB"] += 1;
 
+            updateGame();
+        }
+
+        private void UndoButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BoxBatting_Checked(object sender, RoutedEventArgs e)
+        {
+            if(activeGame != null) { updateBoxScore(); }
+        }
+
+        private async void SubstitutionButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            if(button.Name == "PitcherSubButton")
+            {
+                activeGame.getPitchingTeam().setPitcher(await getPitcherFromInput(String.Format("Pitching in relief for the {0}", activeGame.getPitchingTeam().getName()), true));
+            }
+            else if(button.Name == "PinchHitButton")
+            {
+                activeGame.getBattingTeam().setLineupPosition(await getPositionPlayerFromInput(String.Format("Pinch hitting for {0}:", activeGame.getBattingTeam().getBatter().ToString()), true), activeGame.getBattingTeam().getBatterIndex());
+            }
+            else if(button.Name == "PositionChangeButton")
+            {
+                if(activeGame.getPitchingTeam().getNextEmptyLineup() > 0)
+                {
+                    PlayerEdit(activeGame.getPitchingTeam(), true);
+                }              
+            }
+            updateUI();
+            menu.mainMenuEnable();
+        }
+
+        private async void PlayerEdit(Team team, bool lineup)
+        {
+            EditPlayerDialog dialog = new EditPlayerDialog(team);
+            ContentDialogResult result = await dialog.ShowAsync();
+            if(result == ContentDialogResult.Primary)
+            {
+                dialog.selectedPlayer().positionIndex = dialog.selectedPosition();
+            }
+        }
+
+        private async void OtherTypeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            if(button.Name == "WildPitchButton")
+            {
+                ContentDialogResult result = await wildPitchAdvanceQuery();
+                if(result == ContentDialogResult.Primary)
+                {
+                    for(int baseNum = 3; baseNum >= 1; baseNum--)
+                    {
+                        if(activeGame.bases[baseNum] != null)
+                        {
+                            if(baseNum == 3)
+                            {
+                                activeGame.bases[baseNum].baseStats["R"] += 1;
+                                activeGame.addRuns(1);
+                                
+                            }
+                            else { activeGame.bases[baseNum + 1] = activeGame.bases[baseNum]; }
+                            activeGame.bases[baseNum] = null;
+                        }
+                    }
+                }
+                updateUI();
+            }
+            else if(button.Name == "ErrorButton")
+            {
+                menu.state = QueryStates.Error;
+                menu.baseButtonsEnable(false);
+                activeGame.getLineScore().addError(activeGame.topOfInning);
+                InfoBox.Text = String.Format("Where did {0} end up after the error?", activeGame.getBatter());
+            }       
+        }
+
+        private void BoxPitching_Checked(object sender, RoutedEventArgs e)
+        {
+            if (activeGame != null) { updateBoxScore(); }
         }
     }
 }
