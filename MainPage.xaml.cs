@@ -88,7 +88,7 @@ namespace SOM_Score_Assistant
                 foreach (bool top in new bool[] { true, false })
                 {
                     TextBlock currentBlock = null;
-                    if(inning <= 9)
+                    if(inning < 9 || (inning == 9 && activeGame.getLineScore().inningCount() <= 9))
                     {
                         string shortName = String.Format("{0}{1}Cell", inning, top ? "t" : "b");
                         currentBlock = (TextBlock)this.FindName(shortName);
