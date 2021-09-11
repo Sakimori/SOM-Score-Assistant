@@ -148,7 +148,15 @@ namespace SOM_Score_Assistant
 
             BoxScore.BatterRow[] rows = activeGame.getBoxScore().getBatterRows((bool)BoxBattingAway.IsChecked);
 
-            for (int i = 0; i < battingTeam.getNextEmptyLineup(); i++)
+            int emptyLineup = battingTeam.getNextEmptyLineup();
+            int lineupBoundary = 0;
+
+            if(emptyLineup >= 0)
+            {
+                lineupBoundary = emptyLineup;
+            }
+            else { lineupBoundary = 9; }
+            for (int i = 0; i < lineupBoundary; i++)
             {               
                 if (i == battingTeam.getBatterIndex())
                 {
@@ -160,7 +168,7 @@ namespace SOM_Score_Assistant
                 }
                 populateBatterRow(LineupTable, rows[i], i);
             }
-            for(int i = battingTeam.getNextEmptyLineup(); i < LineupTable.RowDefinitions.Count; i++)
+            for(int i = lineupBoundary; i < LineupTable.RowDefinitions.Count; i++)
             {
                 setBaseTableRowFormatting(LineupTable, i);
                 removeTableFormatting(LineupTable, i);
