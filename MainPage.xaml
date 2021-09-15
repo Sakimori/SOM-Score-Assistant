@@ -91,7 +91,7 @@
         <Button x:Name="NoneBaseButton" Content="Dinger" Width="80" Margin="500,895,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
         <TextBlock x:Name="PitcherName" TextAlignment="Center" HorizontalAlignment="Left" Margin="436,673,0,0" Text="Pitcher McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <Button x:Name="BasesBackButton" Content="Cancel" Width="80" Margin="500,636,0,0" VerticalAlignment="Top" Click="BasesBackButton_Click"/>
-        <Button x:Name="SetupButton" Content="Set Up Game" Width="234" Margin="411,171,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="76"/>
+        <Button x:Name="SetupButton" Content="Set Up Game (Progressive)" Width="234" Margin="411,200,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
         <Button x:Name="Button0" Content="C" Width="40" Margin="520,895,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
         <Button x:Name="Button1" Content="1B" Width="40" Margin="773,620,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
         <Button x:Name="Button2" Content="2B" Width="40" Margin="683,467,0,0" Click="FielderButton_Click" VerticalAlignment="Top"/>
@@ -224,6 +224,7 @@
         <Button x:Name="ErrorButton" Content="Error" Width="113" Margin="815,124,0,0" VerticalAlignment="Top" Click="OtherTypeButton_Click"/>
         <Button x:Name="WildPitchButton" Content="Wild Pitch/PB" Width="113" Margin="815,161,0,0" VerticalAlignment="Top" Click="OtherTypeButton_Click"/>
         <Button x:Name="PositionChangeButton" Content="Position Change" Width="136" Margin="933,199,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
+        <Button x:Name="SetupButtonTotal" Content="Set Up Game (AIO)" Width="234" Margin="411,148,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
     </Grid>
 
 

@@ -34,7 +34,7 @@ namespace SOM_Score_Assistant
         private string readyString = "Ready for another at-bat!";
         bool reminderDisable = false;
         private string[] buttonNames = new string[] { "StealButton", "WalkButton",
-        "OutButton", "HitButton", "OtherButton", "SecondBaseButton", "FirstBaseButton", "ThirdBaseButton", "NoneBaseButton", "BasesBackButton", "SetupButton",
+        "OutButton", "HitButton", "OtherButton", "SecondBaseButton", "FirstBaseButton", "ThirdBaseButton", "NoneBaseButton", "BasesBackButton", "SetupButton", "SetupButtonTotal",
         "Button0", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7", "ButtonP",
         "FlyoutButton", "GroundoutButton", "StrikeoutButton", "FCButton",
         "PinchHitButton", "PitcherSubButton", "PositionChangeButton",
@@ -80,6 +80,37 @@ namespace SOM_Score_Assistant
             menu.mainMenuEnable();
         }
 
+        private async void totalSetup()
+        {
+            string[] teamNames = await addTeams();
+
+            activeGame = new Game(new Team(teamNames[0], teamNames[1]), new Team(teamNames[2], teamNames[3]));
+            awayTrigram.Text = activeGame.getTeam(false).getTrigram();
+            homeTrigram.Text = activeGame.getTeam(true).getTrigram();
+            BoxBattingAway.Content = teamNames[0] + " Batting";
+            BoxBattingHome.Content = teamNames[2] + " Batting";
+            BoxPitchingAway.Content = teamNames[0] + " Pitching";
+            BoxPitchingHome.Content = teamNames[2] + " Pitching";
+
+            Pitcher startingPitcherHome = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getPitchingTeam().getName()), true);
+            Pitcher startingPitcherAway = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getBattingTeam().getName()), true);
+            foreach (Team team in activeGame.getTeams())
+            {
+                team.setLineupPosition(await getPositionPlayerFromInput(String.Format("Leadoff batter for the {0}:", team.getName()), true), 0);
+                for (int lineupNum = 1; lineupNum <= 8; lineupNum++)
+                {
+                    team.setLineupPosition(await getPositionPlayerFromInput(String.Format("Batter #{0} for the {1}:", (lineupNum+1).ToString(), team.getName()), true), lineupNum);
+                }
+            }
+            
+            activeGame.getPitchingTeam().setPitcher(startingPitcherHome);
+            activeGame.getBattingTeam().setPitcher(startingPitcherAway);
+            updateGame();
+
+            InfoBox.Text = readyString;
+            menu.mainMenuEnable();
+        }
+
         private void updateLineScore()
         {
             int[] scores = new int[] { 0, 0 };
@@ -117,8 +148,27 @@ namespace SOM_Score_Assistant
                     currentBlock.Text = Convert.ToString(score);
                     currentBlock.Visibility = Visibility.Visible;
                     if (activeGame.topOfInning && inning == activeGame.getLineScore().inningCount() && !top) { currentBlock.Visibility = Visibility.Collapsed; }
+
                 }
             }
+
+            //bold the current inning
+            int inningNum = activeGame.getLineScore().inningCount() > 9 ? 9 : activeGame.getLineScore().inningCount();
+            Grid table = LineScore;
+            List<TextBlock> removeList = new List<TextBlock>();
+            foreach (object child in table.Children)
+            {
+                if (child.GetType().Equals(typeof(TextBlock)))
+                {
+                    TextBlock block = (TextBlock)child;
+                    if (block.Name.Equals(String.Format("{0}{1}Cell", inningNum.ToString(), activeGame.topOfInning ? "t" : "b")))
+                    {
+                        block.FontWeight = Windows.UI.Text.FontWeights.ExtraBold;
+                    }
+                    else { block.FontWeight = Windows.UI.Text.FontWeights.Normal; }
+                }
+            }
+
             AwayRuns.Text = Convert.ToString(scores[0]);
             HomeRuns.Text = Convert.ToString(scores[1]);
             int[] hits = activeGame.getLineScore().getHits();
@@ -796,7 +846,11 @@ namespace SOM_Score_Assistant
 
         private void SetupButton_Click(object sender, RoutedEventArgs e)
         {
-            gameSetup();
+            if (((Button)sender).Name.Equals("SetupButtonTotal"))
+            {
+                totalSetup();
+            }
+            else { gameSetup(); }
         }
 
         private void FielderButton_Click(object sender, RoutedEventArgs e)

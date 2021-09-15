@@ -44,6 +44,8 @@ namespace SOM_Score_Assistant
         /// Returns home team if passed True, and away team if passed False.
         /// </summary>
         public Team getTeam(bool home) => home ? homeTeam : awayTeam;
+        /// <returns>[Away team, Home team]</returns>
+        public Team[] getTeams() => new Team[] { awayTeam, homeTeam };
         public Team getBattingTeam() => topOfInning ? awayTeam : homeTeam;
         public Team getPitchingTeam() => topOfInning ? homeTeam : awayTeam;
         public LineScore getLineScore() => lineScore;
