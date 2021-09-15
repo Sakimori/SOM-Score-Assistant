@@ -68,16 +68,10 @@ namespace SOM_Score_Assistant
             {
                 topOfInning = true;
                 inning += 1;
-                if (inning <= 9)
+                lineScore.addInning();
+                if(lineScore.getTotalScore()[0] != lineScore.getTotalScore()[1])
                 {
-                    lineScore.addInning();
-                }
-                else
-                {
-                    if(lineScore.getTotalScore()[0] != lineScore.getTotalScore()[1])
-                    {
-                        final = true;
-                    }
+                    final = true;
                 }
             }
 

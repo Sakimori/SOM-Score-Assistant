@@ -917,6 +917,7 @@ namespace SOM_Score_Assistant
             }
             else if(buttonName == "FCButton")
             {
+                activeGame.getBatter().baseStats["AB"] += 1;
                 activeGame.getPitcher().baseStats["OP"] -= 1;
                 activeGame.outs -= 1;
                 bool score = await outWithBaserunners();
