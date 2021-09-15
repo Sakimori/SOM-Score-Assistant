@@ -77,6 +77,7 @@ namespace SOM_Score_Assistant
             activeButtons.Add(buttons["ErrorButton"]);
             activeButtons.Add(buttons["WildPitchButton"]);
             activeButtons.Add(buttons["BasesBackButton"]);
+            activeButtons.Add(buttons["PinchRunButton"]);
             enableActive();
         }
 
@@ -84,6 +85,7 @@ namespace SOM_Score_Assistant
         {
             disableAll();
             activeButtons.Add(buttons["SetupButton"]);
+            activeButtons.Add(buttons["SetupButtonTotal"]);
             enableActive();
         }
         /// <summary>

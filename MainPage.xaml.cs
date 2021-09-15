@@ -37,7 +37,7 @@ namespace SOM_Score_Assistant
         "OutButton", "HitButton", "OtherButton", "SecondBaseButton", "FirstBaseButton", "ThirdBaseButton", "NoneBaseButton", "BasesBackButton", "SetupButton", "SetupButtonTotal",
         "Button0", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7", "ButtonP",
         "FlyoutButton", "GroundoutButton", "StrikeoutButton", "FCButton",
-        "PinchHitButton", "PitcherSubButton", "PositionChangeButton",
+        "PinchHitButton", "PitcherSubButton", "PositionChangeButton", "PinchRunButton",
         "ErrorButton", "WildPitchButton"};
         MenuManager menu;
 
@@ -1095,8 +1095,30 @@ namespace SOM_Score_Assistant
                     PlayerEdit(activeGame.getPitchingTeam(), true);
                 }              
             }
+            else if (button.Name == "PinchRunButton")
+            {
+                BaseEdit();
+            }
+
             updateUI();
             menu.mainMenuEnable();
+        }
+
+        private async void BaseEdit()
+        {
+            if (areBaserunners())
+            {
+                editBaseDialog dialog = new editBaseDialog(activeGame.bases);
+                ContentDialogResult result = await dialog.ShowAsync();
+                if(result == ContentDialogResult.Primary)
+                {
+                    Tuple<PositionPlayer, int> playerAndBase = dialog.getSelectedRunner();
+                    PositionPlayer newPlayer = await getPositionPlayerFromInput("Who is replacing them?", true);
+                    activeGame.getBattingTeam().swapPlayer(playerAndBase.Item1.getName(), newPlayer);
+                    activeGame.bases[playerAndBase.Item2] = newPlayer;
+                }
+            }
+            updateUI();
         }
 
         private async void PlayerEdit(Team team, bool lineup)
@@ -1141,6 +1163,8 @@ namespace SOM_Score_Assistant
                 activeGame.getLineScore().addError(activeGame.topOfInning);
                 InfoBox.Text = String.Format("Where did {0} end up after the error?", activeGame.getBatter());
             }       
+
+
         }
 
         private void BoxPitching_Checked(object sender, RoutedEventArgs e)

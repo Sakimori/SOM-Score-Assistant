@@ -225,6 +225,7 @@
         <Button x:Name="WildPitchButton" Content="Wild Pitch/PB" Width="113" Margin="815,161,0,0" VerticalAlignment="Top" Click="OtherTypeButton_Click"/>
         <Button x:Name="PositionChangeButton" Content="Position Change" Width="136" Margin="933,199,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
         <Button x:Name="SetupButtonTotal" Content="Set Up Game (AIO)" Width="234" Margin="411,148,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
+        <Button x:Name="PinchRunButton" Content="Pinch Runner" Width="113" Margin="815,198,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
     </Grid>
 
 

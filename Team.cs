@@ -79,6 +79,17 @@ namespace SOM_Score_Assistant
             lineup[position] = player;
         }
 
+        public void swapPlayer(string oldName, PositionPlayer newPlayer)
+        {
+            for (int lineupPos = 0; lineupPos < 9; lineupPos++)
+            {
+                if(getNextEmptyLineup() > lineupPos && lineup[lineupPos].getName().Equals(oldName))
+                {
+                    setLineupPosition(newPlayer, lineupPos);
+                }
+            }
+        }
+
         public void setPitcher(Pitcher player)
         {
             activePitcher = player;
@@ -139,6 +150,7 @@ namespace SOM_Score_Assistant
         }
 
         public Handedness getHandedness() => handedness;
+        public string getName() => name;
 
         public override string ToString()
         {
