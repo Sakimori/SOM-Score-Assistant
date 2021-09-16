@@ -9,7 +9,7 @@
   <Identity
     Name="41d15bb3-c26a-4424-9e19-20a5061af15f"
     Publisher="CN=Vivi"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="41d15bb3-c26a-4424-9e19-20a5061af15f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
