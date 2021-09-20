@@ -89,7 +89,7 @@
         <Button x:Name="FirstBaseButton" Content="Single" Width="80" Margin="688,697,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
         <Button x:Name="ThirdBaseButton" Content="Triple" Width="80" Margin="320,697,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
         <Button x:Name="NoneBaseButton" Content="Dinger" Width="80" Margin="500,895,0,0" VerticalAlignment="Top" Click="BaseButton_Click"/>
-        <TextBlock x:Name="PitcherName" TextAlignment="Center" HorizontalAlignment="Left" Margin="436,673,0,0" Text="Pitcher McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <TextBlock x:Name="PitcherName" TextAlignment="Center" HorizontalAlignment="Left" Margin="454,673,0,0" Text="Pitcher McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="168"/>
         <Button x:Name="BasesBackButton" Content="Cancel" Width="80" Margin="500,636,0,0" VerticalAlignment="Top" Click="BasesBackButton_Click"/>
         <Button x:Name="SetupButton" Content="Set Up Game (Progressive)" Width="234" Margin="411,200,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
         <Button x:Name="Button0" Content="C" Width="40" Margin="520,895,0,0" VerticalAlignment="Top" Click="FielderButton_Click"/>
@@ -226,6 +226,17 @@
         <Button x:Name="PositionChangeButton" Content="Position Change" Width="136" Margin="933,199,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
         <Button x:Name="SetupButtonTotal" Content="Set Up Game (AIO)" Width="234" Margin="411,148,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
         <Button x:Name="PinchRunButton" Content="Pinch Runner" Width="113" Margin="815,198,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
+        <Image x:Name="RHPIcon" Margin="625,695,847,273" Source="/Assets/sharkpitch.png"/>
+        <Image x:Name="LHPIcon" Margin="426,695,1046,273" Source="/Assets/sharkpitch.png" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
     </Grid>
 
 
