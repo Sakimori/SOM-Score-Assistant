@@ -129,7 +129,7 @@ namespace SOM_Score_Assistant
 
     public abstract class Player
     {
-        private string name;
+        private string name = "";
         private Handedness handedness;
         public int positionIndex;
         public abstract Dictionary<string, int> baseStats { get; set; }
@@ -161,6 +161,7 @@ namespace SOM_Score_Assistant
     public class PositionPlayer : Player
     {
         public PositionPlayer() { }
+        public PositionPlayer(string initName, Handedness hand) : base(initName, hand) { }
         public PositionPlayer(string initName, Handedness hand, int position) : base(initName, hand, position) { }
 
         override public Dictionary<string, int> baseStats { get; set; } = new Dictionary<string, int>()
@@ -189,6 +190,12 @@ namespace SOM_Score_Assistant
         };
 
         private string decision;
+
+        public override string ToString()
+        {
+            string handString = getHandedness() == Handedness.Left ? " (L)" : " (R)";
+            return getName() + handString;
+        }
     }
     public enum Handedness
     {

@@ -24,6 +24,7 @@ namespace SOM_Score_Assistant
     public sealed partial class MainPage : Page
     {
         Game activeGame;
+        bool updating = false;
 
         List<Game> undoList = new List<Game>();
         private readonly Dictionary<string, string> reminderTexts = new Dictionary<string, string>
@@ -383,19 +384,34 @@ namespace SOM_Score_Assistant
         {
             foreach(int baseNum in activeGame.bases.Keys)
             {
-                TextBlock baseName = (TextBlock)this.FindName("Baserunner" + Convert.ToString(baseNum));
+                ComboBox baseName = (ComboBox)this.FindName("Baserunner" + Convert.ToString(baseNum));
+                baseName.Items.Clear();
+                foreach(PositionPlayer player in activeGame.getBattingTeam().getLineup())
+                {
+                    if(player != null)
+                    {
+                        baseName.Items.Add(player);
+                    }                  
+                }
+
+                PositionPlayer nullPlayer = new PositionPlayer("No Player", Handedness.None);
+                baseName.Items.Add(nullPlayer);
+
                 if (activeGame.bases[baseNum] != null)
                 {                  
-                    baseName.Text = activeGame.bases[baseNum].ToString();
+                    baseName.SelectedItem = activeGame.bases[baseNum];
                 }
                 else
                 {
-                    baseName.Text = "";
+                    baseName.SelectedItem = nullPlayer;
                 }
             }
         }
 
-        private void updatePitcher() => ((TextBlock)this.FindName("PitcherName")).Text = activeGame.getPitcher().ToString();
+        private void updatePitcher()
+        {
+            ((TextBlock)this.FindName("PitcherName")).Text = activeGame.getPitcher().ToString();
+        }
 
         private void updateBatter()
         {
@@ -769,34 +785,21 @@ namespace SOM_Score_Assistant
                     }                 
                 }
 
-                PitcherName.Text = activeGame.getPitchingTeam().getPitcher().ToString();
-                TextBlock[] baseBoxes = new TextBlock[] { Baserunner1, Baserunner2, Baserunner3 };
-                for(int baseI = 1; baseI <= 3; baseI++)
-                {
-                    if (activeGame.bases[baseI] == null)
-                    {
-                        baseBoxes[baseI - 1].Text = "";
-                    }
-                    else
-                    {
-                        baseBoxes[baseI - 1].Text = activeGame.bases[baseI].ToString();
-                    }
-                }
-
                 activeGame.getBattingTeam().advanceLineup();
 
                 updateUI();
             }
 
-            if (activeGame.final)
-            {
-                menu.disableAll();
-                InfoBox.Text = "Final!";
-            }
+            //if (activeGame.final)
+            //{
+            //    menu.disableAll();
+            //    InfoBox.Text = "Final!";
+            //}
         }
 
         private void updateUI()
         {
+            updating = true;
             InfoBox.Text = "";
             if (!reminderDisable)
             {
@@ -815,6 +818,7 @@ namespace SOM_Score_Assistant
             updateBatter();
             updatePitcher();
             updateOuts();
+            updating = false;
         }
 
         private void updateOuts()
@@ -1171,6 +1175,26 @@ namespace SOM_Score_Assistant
         private void BoxPitching_Checked(object sender, RoutedEventArgs e)
         {
             if (activeGame != null) { updateBoxScore(); }
+        }
+
+        private void Baserunner_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!updating)
+            {
+                ComboBox box = (ComboBox)sender;
+                if (box != null)
+                {
+                    if (box.SelectedIndex < 0 || ((PositionPlayer)box.SelectedItem).getName().Equals("No Player"))
+                    {
+                        activeGame.bases[(int)box.Name.Last() - (int)'0'] = null;
+                    }
+                    else
+                    {
+                        activeGame.bases[(int)box.Name.Last() - (int)'0'] = (PositionPlayer)box.SelectedItem;
+                    }
+                }
+                updateUI();
+            }
         }
     }
 }

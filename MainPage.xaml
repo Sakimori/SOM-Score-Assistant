@@ -25,9 +25,9 @@
         <Polygon x:Name="Out2" Stroke="Black" StrokeThickness="6" Points="980,60 980,100 1020,100 1020,60" Fill="White" Margin="-860,331,860,-271"/>
         <TextBlock Text="Outs:" Margin="31,326,1821,657" FontSize="29" FontWeight="SemiBold"/>
 
-        <TextBlock x:Name="Baserunner3" TextAlignment="Right" HorizontalAlignment="Left" Margin="40,710,0,0" Text="Player McName" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
-        <TextBlock x:Name="Baserunner2" TextAlignment="Center"  HorizontalAlignment="Left" Margin="0,370,0,0" Text="Ever Given My Beloved" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="30" Width="1080"/>
-        <TextBlock x:Name="Baserunner1" TextAlignment="Left" HorizontalAlignment="Left" Margin="840,718,0,0" Text="XVI P. Sixteen" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
+        <ComboBox x:Name="Baserunner3" HorizontalAlignment="Left" Margin="40,710,0,0" PlaceholderText="Player McName"  VerticalAlignment="Top" FontSize="20" Width="200" SelectionChanged="Baserunner_SelectionChanged"/>
+        <ComboBox x:Name="Baserunner2" Margin="411,367,0,0" PlaceholderText="Ever Given My Beloved" FontSize="20" Width="260" SelectionChanged="Baserunner_SelectionChanged"/>
+        <ComboBox x:Name="Baserunner1"  HorizontalAlignment="Left" Margin="840,718,0,0" PlaceholderText="XVI P. Sixteen" VerticalAlignment="Top" FontSize="20" Width="200" SelectionChanged="Baserunner_SelectionChanged"/>
         <TextBlock x:Name="BatterLeftHanded" TextAlignment="Left" HorizontalAlignment="Left" Margin="600,960,0,0" Text="Artemis Levy" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <TextBlock x:Name="BatterRightHanded" TextAlignment="Right" HorizontalAlignment="Left" Margin="286,960,0,0" Text="Vivi Shoemaker" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Width="200"/>
         <Grid x:Name="LineScore" Background="#FAFAFA" Margin="1110,30,30,908" BorderBrush="Black" BorderThickness="3">
@@ -226,17 +226,6 @@
         <Button x:Name="PositionChangeButton" Content="Position Change" Width="136" Margin="933,199,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
         <Button x:Name="SetupButtonTotal" Content="Set Up Game (AIO)" Width="234" Margin="411,148,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
         <Button x:Name="PinchRunButton" Content="Pinch Runner" Width="113" Margin="815,198,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
-        <Image x:Name="RHPIcon" Margin="625,695,847,273" Source="/Assets/sharkpitch.png"/>
-        <Image x:Name="LHPIcon" Margin="426,695,1046,273" Source="/Assets/sharkpitch.png" RenderTransformOrigin="0.5,0.5">
-            <Image.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Image.RenderTransform>
-        </Image>
     </Grid>
 
 

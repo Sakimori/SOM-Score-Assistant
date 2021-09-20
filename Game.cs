@@ -24,6 +24,7 @@ namespace SOM_Score_Assistant
             {2, null },
             {3, null }
         };
+        
         public bool init = false;
         public bool final = false;
 
