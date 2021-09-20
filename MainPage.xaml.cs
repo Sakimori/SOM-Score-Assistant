@@ -1042,11 +1042,11 @@ namespace SOM_Score_Assistant
             int maxWalkers = 1;
             for(int baseNum = 1; baseNum <= 3; baseNum++)
             {
-                if(activeGame.bases[baseNum] == null)
+                if(activeGame.bases[baseNum] != null)
                 {
-                    maxWalkers = baseNum;
-                    break;
+                    maxWalkers += 1;
                 }
+                else { break; }
             }
             if(maxWalkers == 4)
             {
