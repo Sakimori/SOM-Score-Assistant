@@ -133,6 +133,7 @@ namespace SOM_Score_Assistant
         private Handedness handedness;
         public int positionIndex;
         public abstract Dictionary<string, int> baseStats { get; set; }
+        public abstract Dictionary<string, int> advStats { get; set; }
 
         public Player() { }
 
@@ -173,6 +174,11 @@ namespace SOM_Score_Assistant
             {"BB", 0 },
             {"K", 0 },
         };
+
+        public override Dictionary<string, int> advStats { get; set; } = new Dictionary<string, int>()
+        {
+
+        };
     }
 
     public class Pitcher : Player
@@ -187,6 +193,11 @@ namespace SOM_Score_Assistant
             {"BB", 0 },
             {"K", 0 },
             {"HR", 0 }
+        };
+
+        public override Dictionary<string, int> advStats { get; set; } = new Dictionary<string, int>()
+        {
+
         };
 
         private string decision;

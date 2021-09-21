@@ -1,0 +1,223 @@
+﻿<Page
+    x:Class="SOM_Score_Assistant.StatsSummaryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SOM_Score_Assistant"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="0,0,635,50">
+        <Grid Name="BattingHeaderGrid" Margin="55,85,62,799" MinHeight="35" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="#" MinHeight="35" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Foreground="Black"/>
+            <TextBlock Text="Player" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="Pos" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="S?" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="PA" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="AB" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="R" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="H" Grid.Column="7" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="RBI" Grid.Column="8" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="2B" Grid.Column="9" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="3B" Grid.Column="10" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HR" Grid.Column="11" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="SO" Grid.Column="13" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="BB" Grid.Column="12" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HBP" Grid.Column="14" Grid.Row="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="SB" Grid.Column="15" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="CS" Grid.Column="16" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="DP" Grid.Column="17" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="TP" Grid.Column="18" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="E" Grid.Column="19" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="IBB" Grid.Column="20" Grid.Row="0" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="PB" Grid.Column="21" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="xCH" Grid.Column="22" Grid.Row="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="xHIT" Grid.Column="23" Grid.Row="0" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="1B" Grid.Column="24" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="LO" Grid.Column="25" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HR" Grid.Column="26" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="FO" Grid.Column="27" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="SBc" Grid.Column="28" Grid.Row="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="CSc" Grid.Column="29" Grid.Row="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black"/>
+            
+        </Grid>
+        <Grid x:Name="BattingTable" Margin="56,120,62,535">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Name="PitchingHeaderGrid" Margin="55,580,62,304" MinHeight="35" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="#" MinHeight="35" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Foreground="Black"/>
+            <TextBlock Text="Player" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="IP" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="H" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="2B" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="3B" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HR" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="R" Grid.Column="7" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="ER" Grid.Column="8" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="K" Grid.Column="9" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="BB" Grid.Column="10" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="IBB" Grid.Column="11" Grid.Row="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HBP" Grid.Column="12" Grid.Row="0" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="WP" Grid.Column="13" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="BF" Grid.Column="14" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="PO" Grid.Column="15" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="DP" Grid.Column="16" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="TP" Grid.Column="17" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="1B" Grid.Column="18" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="LO" Grid.Column="19" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="HR" Grid.Column="20" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+            <TextBlock Text="FO" Grid.Column="21" Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="Black"/>
+        </Grid>
+        <Grid Name="PitchingTable" Margin="55,615,63,99" MinHeight="35" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+        </Grid>
+    </Grid>
+</Page>
