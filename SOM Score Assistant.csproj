@@ -141,6 +141,7 @@
     <Compile Include="EditPlayerDialog.xaml.cs">
       <DependentUpon>EditPlayerDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FullStats.cs" />
     <Compile Include="LineScore.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainPage.xaml.cs">

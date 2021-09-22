@@ -16,7 +16,7 @@ namespace SOM_Score_Assistant
         private string trigram;
         private Image logo;
 
-        private List<PositionPlayer> allPositionPlayers = new List<PositionPlayer>();
+        public List<Tuple<PositionPlayer,int>> allPositionPlayers = new List<Tuple<PositionPlayer,int>>(); // (player, lineup position)
         private List<Pitcher> allPitchers = new List<Pitcher>();
 
         private PositionPlayer[] lineup = new PositionPlayer[9];
@@ -77,6 +77,7 @@ namespace SOM_Score_Assistant
         public void setLineupPosition(PositionPlayer player, int position)
         {
             lineup[position] = player;
+            allPositionPlayers.Add(new Tuple<PositionPlayer, int>(player, position));
         }
 
         public void swapPlayer(string oldName, PositionPlayer newPlayer)
@@ -125,6 +126,54 @@ namespace SOM_Score_Assistant
         public Pitcher getPitcher() => activePitcher;
 
         public PositionPlayer getBatter() => lineup[lineupPosition];
+
+        public PositionPlayer getPlayer(string positionName)
+        {
+            int positionIndex;
+
+            switch (positionName)
+            {
+                case "C":
+                    positionIndex = 0;
+                    break;
+                case "1B":
+                    positionIndex = 1;
+                    break;
+                case "2B":
+                    positionIndex = 2;
+                    break;
+                case "3B":
+                    positionIndex = 3;
+                    break;
+                case "SS":
+                    positionIndex = 4;
+                    break;
+                case "LF":
+                    positionIndex = 5;
+                    break;
+                case "CF":
+                    positionIndex = 6;
+                    break;
+                case "RF":
+                    positionIndex = 7;
+                    break;
+                case "DH":
+                    positionIndex = 8;
+                    break;
+                default:
+                    positionIndex = 9;
+                    break;
+            }
+
+            foreach (PositionPlayer player in lineup)
+            {
+                if (player != null && player.positionIndex == positionIndex)
+                {
+                    return player;
+                }
+            }
+            return null;
+        }
     }
 
     public abstract class Player
@@ -133,7 +182,6 @@ namespace SOM_Score_Assistant
         private Handedness handedness;
         public int positionIndex;
         public abstract Dictionary<string, int> baseStats { get; set; }
-        public abstract Dictionary<string, int> advStats { get; set; }
 
         public Player() { }
 
@@ -175,10 +223,7 @@ namespace SOM_Score_Assistant
             {"K", 0 },
         };
 
-        public override Dictionary<string, int> advStats { get; set; } = new Dictionary<string, int>()
-        {
-
-        };
+        public BatterFullStats fullStats = new BatterFullStats();
     }
 
     public class Pitcher : Player
@@ -195,10 +240,7 @@ namespace SOM_Score_Assistant
             {"HR", 0 }
         };
 
-        public override Dictionary<string, int> advStats { get; set; } = new Dictionary<string, int>()
-        {
-
-        };
+        public PitcherFullStats fullStats = new PitcherFullStats();
 
         private string decision;
 

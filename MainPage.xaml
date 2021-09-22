@@ -17,6 +17,9 @@
         <Line X1="540" Y1="980"
               X2="1080" Y2="440"
               Stroke="Black" StrokeThickness="3"/>
+        <Line X1="1080" Y1="0"
+              X2="1080" Y2="1080"
+              Stroke="Black" StrokeThickness="3"/>
         <Polygon x:Name="NoneBase" Points="530,990 550,990 550,975 540,965 530,975" Fill="White" Stroke="Black" StrokeThickness="1"/>
         <Polygon x:Name="ThirdBase" Points="260,700 280,700 280,720 260,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
         <Polygon x:Name="FirstBase" Points="800,700 820,700 820,720 800,720" Fill="White" Stroke="Black" StrokeThickness="1"/>
@@ -226,6 +229,8 @@
         <Button x:Name="PositionChangeButton" Content="Position Change" Width="136" Margin="933,199,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
         <Button x:Name="SetupButtonTotal" Content="Set Up Game (AIO)" Width="234" Margin="411,148,0,0" VerticalAlignment="Top" Click="SetupButton_Click" Height="47"/>
         <Button x:Name="PinchRunButton" Content="Pinch Runner" Width="113" Margin="815,198,0,0" VerticalAlignment="Top" Click="SubstitutionButton_Click"/>
+        <Button x:Name="AwayStatsViewButton" Content="View/Edit Away Statsheet" Margin="1110,178,0,0" VerticalAlignment="Top" Width="358" Click="AwayStatsViewButton_Click"/>
+        <Button x:Name="HomeStatsViewButton" Content="View/Edit Home Statsheet" Margin="1522,178,0,0" VerticalAlignment="Top" Width="358" Click="HomeStatsViewButton_Click"/>
     </Grid>
 
 

@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,7 +26,8 @@ namespace SOM_Score_Assistant
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Game activeGame;
+        public static Game activeGame;
+        public static bool home;
         bool updating = false;
 
         List<Game> undoList = new List<Game>();
@@ -70,6 +74,8 @@ namespace SOM_Score_Assistant
             BoxBattingHome.Content = teamNames[2] + " Batting";
             BoxPitchingAway.Content = teamNames[0] + " Pitching";
             BoxPitchingHome.Content = teamNames[2] + " Pitching";
+            AwayStatsViewButton.Content = "View/Edit " + teamNames[1] + " Statsheet";
+            HomeStatsViewButton.Content = "View/Edit " + teamNames[3] + " Statsheet";
 
             Pitcher startingPitcher = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getPitchingTeam().getName()), true);
             PositionPlayer leadoffBatter = await getPositionPlayerFromInput(String.Format("Leadoff batter for the {0}:", activeGame.getBattingTeam().getName()), true);
@@ -92,6 +98,8 @@ namespace SOM_Score_Assistant
             BoxBattingHome.Content = teamNames[2] + " Batting";
             BoxPitchingAway.Content = teamNames[0] + " Pitching";
             BoxPitchingHome.Content = teamNames[2] + " Pitching";
+            AwayStatsViewButton.Content = "View/Edit " + teamNames[1] + " Statsheet";
+            HomeStatsViewButton.Content = "View/Edit " + teamNames[3] + " Statsheet";
 
             Pitcher startingPitcherHome = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getPitchingTeam().getName()), true);
             Pitcher startingPitcherAway = await getPitcherFromInput(String.Format("Starting Pitcher for the {0}:", activeGame.getBattingTeam().getName()), true);
@@ -495,17 +503,25 @@ namespace SOM_Score_Assistant
                 else
                 {
                     activeGame.addRuns(1);
-                    runner.baseStats["R"] += 1;
+                    runner.fullStats.addStat("R", 1);
                 }
                 activeGame.bases[startBase] = null;
-                activeGame.getBoxScore().awayTextStatsBatting.addValue("SB", runner, 1);
+                runner.fullStats.addStat("SB", 1);
+                if(activeGame.getPitchingTeam().getPlayer("C") != null)
+                {
+                    activeGame.getPitchingTeam().getPlayer("C").fullStats.addStat("SBc", 1);
+                }
                 return true;
             }
             else if(result == ContentDialogResult.Secondary)
             {
-                activeGame.getPitcher().baseStats["OP"] += 1;
+                activeGame.getPitcher().fullStats.addStat("OP", 1);
                 activeGame.bases[startBase] = null;
-                activeGame.getBoxScore().awayTextStatsBatting.addValue("CS", runner, 1);
+                runner.fullStats.addStat("CS", 1);
+                if (activeGame.getPitchingTeam().getPlayer("C") != null)
+                {
+                    activeGame.getPitchingTeam().getPlayer("C").fullStats.addStat("CSc", 1);
+                }
                 activeGame.outs += 1;
                 return true;
             }
@@ -626,36 +642,35 @@ namespace SOM_Score_Assistant
                 int runs = 0;
                 if(menu.state == QueryStates.Batter)
                 {
-                    activeGame.getBatter().baseStats["H"] += 1;
-                    activeGame.getPitcher().baseStats["H"] += 1;
+                    activeGame.getBatter().fullStats.addStat("H",1);
+                    activeGame.getPitcher().fullStats.addStat("H", 1);
                     activeGame.getLineScore().addHit(activeGame.topOfInning);
-                    activeGame.getBattingBoxScore().addValue("TB", activeGame.getBatter(), baseNum);
                 }
-                activeGame.getBatter().baseStats["AB"] += 1;              
+                activeGame.getBatter().fullStats.addStat("AB", 1);              
                 if (baseNum == 4)
                 {
-                    activeGame.getBattingBoxScore().addValue("HR", activeGame.getBatter(), 1);
-                    activeGame.getPitcher().baseStats["HR"] += 1;
+                    activeGame.getBatter().fullStats.addStat("HR", 1);
+                    activeGame.getPitcher().fullStats.addStat("HR", 1);
                     runs = 1;
                     for(int baseI = 1; baseI <= 3; baseI++)
                     {
                         if(activeGame.bases[baseI] != null)
                         {
                             runs += 1;
-                            activeGame.bases[baseI].baseStats["R"] += 1;
+                            activeGame.bases[baseI].fullStats.addStat("R", 1);
                             activeGame.bases[baseI] = null;
                         }
                     }
                 }
                 else if (baseNum == 3)
                 {
-                    activeGame.getBattingBoxScore().addValue("3B", activeGame.getBatter(), 1);
+                    activeGame.getBatter().fullStats.addStat("3B",1);
                     for(int baseI = 1; baseI <= 3; baseI++)
                     {
                         if (activeGame.bases[baseI] != null)
                         {
                             runs += 1;
-                            activeGame.bases[baseI].baseStats["R"] += 1;
+                            activeGame.bases[baseI].fullStats.addStat("R", 1);
                             activeGame.bases[baseI] = null;
                         }
                     }
@@ -663,13 +678,13 @@ namespace SOM_Score_Assistant
                 }
                 else if (baseNum == 2)
                 {
-                    activeGame.getBattingBoxScore().addValue("2B", activeGame.getBatter(), 1);
-                    for(int baseI = 2; baseI <= 3; baseI++)
+                    activeGame.getBatter().fullStats.addStat("2B", 1);
+                    for (int baseI = 2; baseI <= 3; baseI++)
                     {
                         if (activeGame.bases[baseI] != null)
                         {
                             runs += 1;
-                            activeGame.bases[baseI].baseStats["R"] += 1;
+                            activeGame.bases[baseI].fullStats.addStat("R", 1);
                             activeGame.bases[baseI] = null;
                         }
                     }
@@ -685,7 +700,7 @@ namespace SOM_Score_Assistant
                     if(activeGame.bases[3] != null)
                     {
                         runs += 1;
-                        activeGame.bases[3].baseStats["R"] += 1;
+                        activeGame.bases[3].fullStats.addStat("R", 1);
                         activeGame.bases[3] = null;
                     }
                     for(int baseI = 2; baseI >= 1; baseI--)
@@ -698,8 +713,7 @@ namespace SOM_Score_Assistant
                     }
                     else { activeGame.bases[1] = activeGame.getBatter(); }
                 }
-                activeGame.getBatter().baseStats["RBI"] += runs;
-                activeGame.getBattingBoxScore().addValue("RBI", activeGame.getBatter(), runs);
+                activeGame.getBatter().fullStats.addStat("RBI", runs);
                 activeGame.addRuns(runs);
             }
 
@@ -711,9 +725,8 @@ namespace SOM_Score_Assistant
                 {
                     if (queuedBaserunner.Item2 != null)
                     {
-                        queuedBaserunner.Item2.baseStats["RBI"] += 1;
-                        activeGame.getBattingBoxScore().addValue("RBI", queuedBaserunner.Item2, 1);
-                        runner.baseStats["R"] += 1;
+                        queuedBaserunner.Item2.fullStats.addStat("RBI", 1);
+                        runner.fullStats.addStat("R", 1);
                         activeGame.addRuns(1);
                         activeGame.bases[originBase] = null;
                         baserunnersToCheck.RemoveAt(0);
@@ -866,14 +879,14 @@ namespace SOM_Score_Assistant
         private async void OutTypeButton_Click(object sender, RoutedEventArgs e)
         {
             string buttonName = ((Button)sender).Name;
-            activeGame.getPitcher().baseStats["OP"] += 1;
+            activeGame.getPitcher().fullStats.addStat("OP", 1);
             activeGame.outs += 1;
 
             if(buttonName == "StrikeoutButton")
             {
-                activeGame.getPitcher().baseStats["K"] += 1;
-                activeGame.getBatter().baseStats["K"] += 1;
-                activeGame.getBatter().baseStats["AB"] += 1;
+                activeGame.getPitcher().fullStats.addStat("K", 1);
+                activeGame.getBatter().fullStats.addStat("K", 1);
+                activeGame.getBatter().fullStats.addStat("AB", 1);
             }
             else if(buttonName == "GroundoutButton")
             {
@@ -884,16 +897,16 @@ namespace SOM_Score_Assistant
                 }
                 else
                 {
-                    sac = await outWithBaserunners();   
+                    sac = await outWithBaserunners(true);
                 }
 
                 if (!sac)
                 {
-                    activeGame.getBatter().baseStats["AB"] += 1;
+                    activeGame.getBatter().fullStats.addStat("AB", 1);
                 }
                 else
                 {
-                    activeGame.getBatter().baseStats["RBI"] += 1;
+                    activeGame.getBatter().fullStats.addStat("RBI", 1);
                     activeGame.addRuns(1);
                 }
             }
@@ -911,27 +924,31 @@ namespace SOM_Score_Assistant
 
                 if (!sac)
                 {
-                    activeGame.getBatter().baseStats["AB"] += 1;
+                    activeGame.getBatter().fullStats.addStat("AB", 1);
                 }
                 else
                 {
-                    activeGame.getBatter().baseStats["RBI"] += 1;
+                    activeGame.getBatter().fullStats.addStat("RBI", 1);
                     activeGame.addRuns(1);
                 }
             }
             else if(buttonName == "FCButton")
             {
-                activeGame.getBatter().baseStats["AB"] += 1;
-                activeGame.getPitcher().baseStats["OP"] -= 1;
+                activeGame.getBatter().fullStats.addStat("AB", 1);
+                activeGame.getPitcher().fullStats.addStat("OP", -1);
                 activeGame.outs -= 1;
                 bool score = await outWithBaserunners();
+                if (score)
+                {
+                    activeGame.getBatter().fullStats.addStat("RBI", 1);
+                }
                 activeGame.bases[1] = activeGame.getBatter();
             }
 
             updateGame();
         }
 
-        public async Task<bool> outWithBaserunners()
+        public async Task<bool> outWithBaserunners(bool dp = false)
         {
             bool sac = false;
             if (thirdOccupied())
@@ -940,15 +957,18 @@ namespace SOM_Score_Assistant
                 if (result == ContentDialogResult.Primary)
                 {
                     sac = true;
-                    activeGame.bases[3].baseStats["R"] += 1;
+                    activeGame.bases[3].fullStats.addStat("R", 1);
                     activeGame.bases[3] = null;
                 }
                 else if (result == ContentDialogResult.Secondary)
                 {
                     activeGame.bases[3] = null;
                     activeGame.outs += 1;
-                    activeGame.getPitcher().baseStats["OP"] += 1;
-                    activeGame.getBattingBoxScore().addValue("GIDP", activeGame.getBatter(), 1);
+                    activeGame.getPitcher().fullStats.addStat("OP", 1);
+                    if (dp)
+                    {
+                        activeGame.getBatter().fullStats.addStat("GIDP", 1);
+                    }
                 }
             }
             for (int baseI = 2; baseI >= 1; baseI--)
@@ -965,8 +985,12 @@ namespace SOM_Score_Assistant
                     {
                         activeGame.bases[baseI] = null;
                         activeGame.outs += 1;
-                        activeGame.getPitcher().baseStats["OP"] += 1;
-                        activeGame.getBattingBoxScore().addValue("GIDP", activeGame.getBatter(), 1);
+                        activeGame.getPitcher().fullStats.addStat("OP", 1);
+                        if (dp)
+                        {
+                            activeGame.getBatter().fullStats.addStat("GIDP", 1);
+                        }
+                        
                     }
                 }
             }
@@ -982,14 +1006,14 @@ namespace SOM_Score_Assistant
                 if (result == ContentDialogResult.Primary)
                 {
                     score = true;
-                    activeGame.bases[3].baseStats["R"] += 1;
+                    activeGame.bases[3].fullStats.addStat("R", 1);
                     activeGame.bases[3] = null;
                 }
                 else if (result == ContentDialogResult.Secondary)
                 {
                     activeGame.bases[3] = null;
                     activeGame.outs += 1;
-                    activeGame.getPitcher().baseStats["OP"] += 1;
+                    activeGame.getPitcher().fullStats.addStat("OP", 1);
                 }
             }
             for (int baseI = 2; baseI >= 1; baseI--)
@@ -1006,7 +1030,7 @@ namespace SOM_Score_Assistant
                     {
                         activeGame.bases[baseI] = null;
                         activeGame.outs += 1;
-                        activeGame.getPitcher().baseStats["OP"] += 1;
+                        activeGame.getPitcher().fullStats.addStat("OP", 1);
                     }
                 }
             }
@@ -1054,9 +1078,9 @@ namespace SOM_Score_Assistant
             }
             if(maxWalkers == 4)
             {
-                activeGame.bases[3].baseStats["R"] += 1;
+                activeGame.bases[3].fullStats.addStat("R", 1);
                 activeGame.bases[3] = null;
-                activeGame.getBatter().baseStats["RBI"] += 1;
+                activeGame.getBatter().fullStats.addStat("RBI", 1);
                 activeGame.addRuns(1);
                 maxWalkers = 3;
             }
@@ -1066,8 +1090,8 @@ namespace SOM_Score_Assistant
                 activeGame.bases[walkies - 1] = null;
             }
             activeGame.bases[1] = activeGame.getBatter();
-            activeGame.getBatter().baseStats["BB"] += 1;
-            activeGame.getPitcher().baseStats["BB"] += 1;
+            activeGame.getBatter().fullStats.addStat("BB", 1);
+            activeGame.getPitcher().fullStats.addStat("BB", 1);
 
             updateGame();
         }
@@ -1150,7 +1174,7 @@ namespace SOM_Score_Assistant
                         {
                             if(baseNum == 3)
                             {
-                                activeGame.bases[baseNum].baseStats["R"] += 1;
+                                activeGame.bases[baseNum].fullStats.addStat("R", 1);
                                 activeGame.addRuns(1);
                                 
                             }
@@ -1159,7 +1183,6 @@ namespace SOM_Score_Assistant
                         }
                     }
                 }
-                updateUI();
             }
             else if(button.Name == "ErrorButton")
             {
@@ -1167,9 +1190,9 @@ namespace SOM_Score_Assistant
                 menu.baseButtonsEnable(false);
                 activeGame.getLineScore().addError(activeGame.topOfInning);
                 InfoBox.Text = String.Format("Where did {0} end up after the error?", activeGame.getBatter());
-            }       
+            }
 
-
+            updateUI();
         }
 
         private void BoxPitching_Checked(object sender, RoutedEventArgs e)
@@ -1195,6 +1218,36 @@ namespace SOM_Score_Assistant
                 }
                 updateUI();
             }
+        }
+
+        private async void AwayStatsViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            home = false;
+            await TryOpenNewWindow(typeof(StatsSummaryPage));
+        }
+
+        private async void HomeStatsViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            home = true;
+            await TryOpenNewWindow(typeof(StatsSummaryPage));
+        }
+
+        public static async Task<bool> TryOpenNewWindow(Type page)
+        {
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(page);
+                Window.Current.Content = frame;
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            return viewShown;
         }
     }
 }

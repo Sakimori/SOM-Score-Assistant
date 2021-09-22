@@ -117,7 +117,7 @@ namespace SOM_Score_Assistant
             string[] statNames = new string[] { "AB", "R", "H", "RBI", "BB", "K" };
             for(int index = 3; index <= 8; index++)
             {
-                blocks[index] = basicBlock(player.baseStats[statNames[index - 3]].ToString());
+                blocks[index] = basicBlock(player.fullStats.getStat(statNames[index - 3]).ToString());
             }
 
             return new BatterRow(blocks, player);
@@ -135,13 +135,13 @@ namespace SOM_Score_Assistant
             };
 
             //calculate IP from OP
-            double OP = Convert.ToDouble(player.baseStats["OP"]);
+            double OP = Convert.ToDouble(player.fullStats.getStat("OP"));
             blocks[1] = basicBlock(Math.Floor(OP / 3).ToString() + "." + (OP % 3).ToString());
 
             string[] statNames = new string[] { "H", "R", "BB", "K", "HR" };
             for (int index = 2; index <= 6; index++)
             {
-                blocks[index] = basicBlock(player.baseStats[statNames[index - 2]].ToString());
+                blocks[index] = basicBlock(player.fullStats.getStat(statNames[index - 2]).ToString());
             }
 
             return new PitcherRow(blocks, player);

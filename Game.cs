@@ -94,7 +94,8 @@ namespace SOM_Score_Assistant
         public void addRuns(int runs)
         {
             lineScore.addScore(runs, topOfInning);
-            getPitcher().baseStats["R"] += runs;
+            getPitcher().fullStats.addStat("R",runs);
+            getPitcher().fullStats.addStat("ER", runs);
         }
 
         public Pitcher getPitcher() => topOfInning? homeTeam.getPitcher() : awayTeam.getPitcher();
