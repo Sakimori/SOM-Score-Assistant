@@ -47,6 +47,11 @@ namespace SOM_Score_Assistant
             statsArray[translate[name]] += add;
         }
 
+        public void setStat(int index, int value)
+        {
+            statsArray[index] = value;
+        }
+
         public PitcherFullStats()
         {
 
@@ -102,6 +107,11 @@ namespace SOM_Score_Assistant
         public int getStat(string name)
         {
             return statsArray[translate[name]];
+        }
+
+        public void setStat(int index, int value)
+        {
+            statsArray[index] = value;
         }
 
         public void addStat(string name, int add)
